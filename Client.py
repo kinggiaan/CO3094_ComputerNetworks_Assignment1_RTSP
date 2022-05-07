@@ -68,37 +68,38 @@ class Client:
 	
 	def setupMovie(self):
 		"""Setup button handler."""
-	#TODO
+	#TODO An
 	
 	def exitClient(self):
 		"""Teardown button handler."""
-	#TODO
+	#TODO An
 
 	def pauseMovie(self):
 		"""Pause button handler."""
-	#TODO
+	#TODO An
 	
 	def playMovie(self):
 		"""Play button handler."""
-	#TODO
+	#TODO An
 	
 	def listenRtp(self):		
 		"""Listen for RTP packets."""
-		#TODO
+		#TODO An 
 					
 	def writeFrame(self, data):
 		"""Write the received frame to a temp image file. Return the image file."""
-	#TODO
+	#TODO An
 	
 	def updateMovie(self, imageFile):
 		"""Update the image file as video frame in the GUI."""
-	#TODO
+	#TODO An
 		
 	def connectToServer(self):
 		"""Connect to the Server. Start a new RTSP/TCP session."""
-	#TODO
+	#TODO An
 	
 	def sendRtspRequest(self, requestCode):
+	#TODO An
 		"""Send RTSP request to the server."""	
 		#-------------
 		# TO COMPLETE
@@ -108,13 +109,14 @@ class Client:
 	
 	def recvRtspReply(self):
 		"""Receive RTSP reply from the server."""
-		#TODO
+		#TODO Nguyen
 	
 	def parseRtspReply(self, data):
 		"""Parse the RTSP reply from the server."""
-		#TODO
+		#TODO Nguyen
 	
 	def openRtpPort(self):
+		#TODO Nguyen
 		"""Open RTP socket binded to a specified port."""
 		#-------------
 		# TO COMPLETE
@@ -128,4 +130,4 @@ class Client:
 
 	def handler(self):
 		"""Handler on explicitly closing the GUI window."""
-		#TODO
+		#TODO Nguyen
