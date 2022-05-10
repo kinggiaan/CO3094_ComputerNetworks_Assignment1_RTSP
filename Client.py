@@ -125,9 +125,9 @@ class Client:
 	def parseRtspReply(self, data):
 		"""Parse the RTSP reply from the server."""
 		#TODO Nguyen
+		
 		print ("Parsing Received Rtsp data...")
 
-		"""Parse the RTSP reply from the server."""
 		lines = data.split('\n')
 		seqNum = int(lines[1].split(' ')[1])
 
@@ -142,13 +142,16 @@ class Client:
 			if self.sessionId == session:
 				if int(lines[0].split(' ')[1]) == 200:
 					if self.requestSent == self.SETUP:
+						
 						#-------------
 						# TO COMPLETE
 						#-------------
 						# Update RTSP state.
+						
 						print ("Updating RTSP state...")
 						# self.state = ...
 						self.state = self.READY
+						
 						# Open RTP port.
 						#self.openRtpPort()
 						print ("Setting Up RtpPort for Video Stream")
@@ -176,13 +179,12 @@ class Client:
 		#-------------
 		# Create a new datagram socket to receive RTP packets from the server
 		# self.rtpSocket = ...
-		
-		# Set the timeout value of the socket to 0.5sec
-		# ...
+		elf.rtpSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 		
 		# Set the timeout value of the socket to 0.5sec
 		# ...
 		self.rtpSocket.settimeout(0.5)
+		
 #		try:
 			# Bind the socket to the address using the RTP port given by the client user
 			# ...
