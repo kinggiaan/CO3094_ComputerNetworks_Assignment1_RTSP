@@ -110,11 +110,64 @@ class Client:
 	def recvRtspReply(self):
 		"""Receive RTSP reply from the server."""
 		#TODO Nguyen
-	
+		while True:
+			reply = self.rtspSocket.recv(1024)
+			
+			if reply: 
+				self.parseRtspReply(reply)
+			
+			# Close the RTSP socket upon requesting Teardown
+			if self.requestSent == self.TEARDOWN:
+				self.rtspSocket.shutdown(socket.SHUT_RDWR)
+				self.rtspSocket.close()
+				break
+				
 	def parseRtspReply(self, data):
 		"""Parse the RTSP reply from the server."""
 		#TODO Nguyen
-	
+		print ("Parsing Received Rtsp data...")
+
+		"""Parse the RTSP reply from the server."""
+		lines = data.split('\n')
+		seqNum = int(lines[1].split(' ')[1])
+
+		# Process only if the server reply's sequence number is the same as the request's
+		if seqNum == self.rtspSeq:
+			session = int(lines[2].split(' ')[1])
+			# New RTSP session ID
+			if self.sessionId == 0:
+				self.sessionId = session
+
+			# Process only if the session ID is the same
+			if self.sessionId == session:
+				if int(lines[0].split(' ')[1]) == 200:
+					if self.requestSent == self.SETUP:
+						#-------------
+						# TO COMPLETE
+						#-------------
+						# Update RTSP state.
+						print ("Updating RTSP state...")
+						# self.state = ...
+						self.state = self.READY
+						# Open RTP port.
+						#self.openRtpPort()
+						print ("Setting Up RtpPort for Video Stream")
+						self.openRtpPort()
+
+					elif self.requestSent == self.PLAY:
+						 self.state = self.PLAYING
+						 print ('-'*60 + "\nClient is PLAYING...\n" + '-'*60)
+					elif self.requestSent == self.PAUSE:
+						 self.state = self.READY
+
+						# The play thread exits. A new thread is created on resume.
+						 self.playEvent.set()
+
+					elif self.requestSent == self.TEARDOWN:
+						# self.state = ...
+
+						# Flag the teardownAcked to close the socket.
+						self.teardownAcked = 1
 	def openRtpPort(self):
 		#TODO Nguyen
 		"""Open RTP socket binded to a specified port."""
@@ -127,7 +180,34 @@ class Client:
 		# Set the timeout value of the socket to 0.5sec
 		# ...
 		
+		# Set the timeout value of the socket to 0.5sec
+		# ...
+		self.rtpSocket.settimeout(0.5)
+#		try:
+			# Bind the socket to the address using the RTP port given by the client user
+			# ...
+#		except:
+#			tkMessageBox.showwarning('Unable to Bind', 'Unable to bind PORT=%d' %self.rtpPort)
+
+		try:
+			#self.rtpSocket.connect(self.serverAddr,self.rtpPort)
+			self.rtpSocket.bind((self.serverAddr,self.rtpPort))   # WATCH OUT THE ADDRESS FORMAT!!!!!  rtpPort# should be bigger than 1024
+			#self.rtpSocket.listen(5)
+			print ("Bind RtpPort Success")
+
+		except:
+			tkMessageBox.showwarning('Connection Failed', 'Connection to rtpServer failed...')
 
 	def handler(self):
 		"""Handler on explicitly closing the GUI window."""
 		#TODO Nguyen
+		self.pauseMovie()
+		if tkMessageBox.askokcancel("Quit?", "Are you sure you want to quit?"):
+			self.exitClient()
+		else: # When the user presses cancel, resume playing.
+			#self.playMovie()
+			print ("Playing Movie")
+			threading.Thread(target=self.listenRtp).start()
+			#self.playEvent = threading.Event()
+			#self.playEvent.clear()
+			self.sendRtspRequest(self.PLAY)
