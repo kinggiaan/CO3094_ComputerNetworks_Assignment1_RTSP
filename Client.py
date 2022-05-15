@@ -255,7 +255,7 @@ class Client:
 
 		lines = data.decode().split('\n')
 		seqNum = int(lines[1].split(' ')[1])
-		
+
 		# Process only if the server reply's sequence number is the same as the request's
 		if seqNum == self.rtspSeq:
 			session = int(lines[2].split(' ')[1])
